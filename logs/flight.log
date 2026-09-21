@@ -1,0 +1,40 @@
+tick=1 altitude=9618 airspeed=474 fuel=96 engine=ON status=NORMAL
+tick=2 altitude=10317 airspeed=424 fuel=92 engine=ON status=NORMAL
+tick=3 altitude=10048 airspeed=419 fuel=88 engine=ON status=NORMAL
+tick=4 altitude=10482 airspeed=422 fuel=84 engine=ON status=NORMAL
+tick=5 altitude=10230 airspeed=490 fuel=80 engine=ON status=NORMAL
+tick=6 altitude=10451 airspeed=432 fuel=76 engine=ON status=NORMAL
+tick=7 altitude=10478 airspeed=464 fuel=72 engine=ON status=NORMAL
+tick=8 altitude=10121 airspeed=483 fuel=68 engine=ON status=NORMAL
+tick=9 altitude=9724 airspeed=427 fuel=64 engine=ON status=NORMAL
+tick=10 altitude=10176 airspeed=422 fuel=60 engine=ON status=NORMAL
+tick=11 altitude=9598 airspeed=439 fuel=56 engine=ON status=NORMAL
+tick=12 altitude=9453 airspeed=446 fuel=52 engine=ON status=ALTITUDE WARNING
+tick=13 altitude=9483 airspeed=471 fuel=48 engine=ON status=ALTITUDE WARNING
+tick=14 altitude=9417 airspeed=488 fuel=44 engine=ON status=ALTITUDE WARNING
+tick=15 altitude=9709 airspeed=489 fuel=40 engine=ON status=NORMAL
+tick=16 altitude=10238 airspeed=481 fuel=36 engine=ON status=NORMAL
+tick=17 altitude=10416 airspeed=489 fuel=32 engine=ON status=NORMAL
+tick=18 altitude=9933 airspeed=442 fuel=28 engine=ON status=NORMAL
+tick=19 altitude=10247 airspeed=416 fuel=24 engine=ON status=NORMAL
+tick=20 altitude=10327 airspeed=426 fuel=20 engine=ON status=LOW FUEL
+tick=1 altitude=10187 airspeed=462 fuel=96 engine=ON status=NORMAL
+tick=2 altitude=10377 airspeed=435 fuel=92 engine=ON status=NORMAL
+tick=3 altitude=9809 airspeed=441 fuel=88 engine=ON status=NORMAL
+tick=4 altitude=9960 airspeed=422 fuel=84 engine=ON status=NORMAL
+tick=5 altitude=9518 airspeed=459 fuel=80 engine=ON status=NORMAL
+tick=6 altitude=9573 airspeed=474 fuel=76 engine=ON status=NORMAL
+tick=7 altitude=10356 airspeed=452 fuel=72 engine=ON status=NORMAL
+tick=8 altitude=10560 airspeed=455 fuel=68 engine=ON status=ALTITUDE WARNING
+tick=9 altitude=10104 airspeed=435 fuel=64 engine=ON status=NORMAL
+tick=10 altitude=10564 airspeed=455 fuel=60 engine=ON status=ALTITUDE WARNING
+tick=11 altitude=10323 airspeed=460 fuel=56 engine=ON status=NORMAL
+tick=12 altitude=9587 airspeed=476 fuel=52 engine=ON status=NORMAL
+tick=13 altitude=10256 airspeed=487 fuel=48 engine=ON status=NORMAL
+tick=14 altitude=10487 airspeed=421 fuel=44 engine=ON status=NORMAL
+tick=15 altitude=10527 airspeed=437 fuel=40 engine=ON status=ALTITUDE WARNING
+tick=16 altitude=10469 airspeed=458 fuel=36 engine=ON status=NORMAL
+tick=17 altitude=10167 airspeed=458 fuel=32 engine=ON status=NORMAL
+tick=18 altitude=10339 airspeed=410 fuel=28 engine=ON status=NORMAL
+tick=19 altitude=10323 airspeed=437 fuel=24 engine=ON status=NORMAL
+tick=20 altitude=10589 airspeed=478 fuel=20 engine=ON status=ALTITUDE WARNING
