@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ForgeOS Flight Control &amp; Monitoring</title>
+<style>
+:root{--bg:#070c14;--panel:#0f1826;--panel2:#142136;--line:#22344f;--txt:#d7e3f4;--dim:#7d92b0;--green:#2ecc8f;--amber:#f5b83d;--orange:#ff8a3d;--red:#ff4d5e;--cyan:#38c7ff;--blue:#7590ff;--gray:#5d6b80}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(1200px 600px at 70% -10%,#0f2440 0,var(--bg) 60%);color:var(--txt);font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;min-height:100vh}
+header{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid var(--line);background:rgba(7,12,20,.82);backdrop-filter:blur(10px);position:sticky;top:0;z-index:5}
+h1{margin:0;font-size:22px;letter-spacing:.5px}.sub{color:var(--dim);font-size:13px;margin-top:4px}.live{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:1.5px;color:var(--cyan)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--gray)}.dot.on{background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.6s infinite}.dot.off{background:var(--red)}
+@keyframes pulse{50%{opacity:.35}} main{padding:22px 28px;max-width:1600px;margin:auto}.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:22px}
+.card,.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}.card .k,.stat .k{font-size:11px;letter-spacing:1.4px;color:var(--dim);text-transform:uppercase}.card .v{font-size:26px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums}
+.layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(320px,1fr);gap:16px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(390px,1fr));gap:16px}
+.flight{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:12px;padding:16px;transition:border-color .3s,box-shadow .3s}.flight.st-emergency{border-color:var(--red);box-shadow:0 0 18px rgba(255,77,94,.25)}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.fid{font-size:20px;font-weight:800;letter-spacing:1px}.fname{color:var(--dim);font-size:13px}.badge{font-size:11px;font-weight:800;letter-spacing:1px;padding:5px 9px;border-radius:999px;white-space:nowrap;background:#1c2a40;color:var(--dim)}
+.badge.st-normal{background:rgba(46,204,143,.15);color:var(--green)}.badge.st-altitude-warning{background:rgba(245,184,61,.15);color:var(--amber)}.badge.st-low-fuel{background:rgba(255,138,61,.16);color:var(--orange)}.badge.st-altitude-low-fuel{background:rgba(255,110,61,.2);color:#ff6e3d}.badge.st-emergency{background:var(--red);color:#fff;animation:pulse 1s infinite}.badge.st-offline{background:#2a3242;color:var(--gray)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin:14px 0}.stat .v{font-size:19px;font-weight:600;font-variant-numeric:tabular-nums}.bar{height:10px;background:#0a121e;border:1px solid var(--line);border-radius:6px;overflow:hidden}.fill{height:100%;width:0;background:var(--green);transition:width .6s,background .3s}.fuelrow{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);margin-bottom:6px}.foot{margin-top:12px;font-size:12px;color:var(--dim);display:flex;justify-content:space-between;gap:10px}.eng-on{color:var(--green)}.eng-off{color:var(--red)}
+.chart{width:100%;height:180px;margin-top:14px;border:1px solid var(--line);border-radius:8px;background:#09111d;display:block}.legend{display:flex;gap:12px;font-size:10px;color:var(--dim);margin-top:5px}.legend span:first-child{color:var(--cyan)}.legend span:last-child{color:var(--blue)}
+.panel{margin-bottom:16px}.panel h2{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;margin:0 0 12px}.process-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.proc{background:#0a121e;border:1px solid var(--line);border-radius:8px;padding:9px;font-size:12px}.proc .small{color:var(--dim);font-size:10px}.online{color:var(--green)}.offline{color:var(--red)}
+.events{max-height:250px;overflow:auto}.event{padding:8px 0;border-bottom:1px solid #1a2b41;font-size:12px}.event.warn{color:var(--amber)}.event.bad{color:#ff7d8a}.event b{color:var(--cyan)}
+.log{height:300px;overflow:auto;background:#050b12;border:1px solid var(--line);border-radius:8px;padding:10px;white-space:pre-wrap;font:10px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;color:#a7c7df}
+.actions{margin-top:24px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}.toolbar{display:flex;gap:9px}.toolbar button{background:#10243a;color:var(--txt);border:1px solid #2b4967}.toolbar button.danger{background:#3a1218;color:#ff8f9b;border-color:var(--red)}button{padding:10px 15px;border-radius:8px;font-weight:700;letter-spacing:.7px;cursor:pointer}button:hover{filter:brightness(1.2)}button:disabled{opacity:.4;cursor:not-allowed}.note{color:var(--dim);font-size:12px;max-width:850px;line-height:1.5}
+@media(max-width:1100px){.layout{grid-template-columns:1fr}}@media(max-width:650px){header,main{padding:15px}.grid{grid-template-columns:1fr}.process-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>ForgeOS Flight Control &amp; Monitoring</h1><div class="sub">Team 3 | Section 9</div></div>
+  <div style="text-align:right"><div class="live"><span class="dot" id="connDot"></span><span>LIVE SYNTHETIC TELEMETRY</span></div><div class="sub" id="connText">Connecting to backend...</div></div>
+</header>
+<main>
+<section class="summary">
+  <div class="card"><div class="k">Backend status</div><div class="v" id="sBackend">--</div></div>
+  <div class="card"><div class="k">Flights</div><div class="v" id="sFlights">--</div></div>
+  <div class="card"><div class="k">Telemetry packets</div><div class="v" id="sPackets">--</div></div>
+  <div class="card"><div class="k">Controller PID</div><div class="v" id="sPid">--</div></div>
+  <div class="card"><div class="k">Uptime</div><div class="v" id="sUp">--</div></div>
+</section>
+<div class="layout">
+<section><div class="grid" id="grid"></div></section>
+<aside>
+<section class="panel"><h2>Process Monitor</h2><div class="process-grid" id="processes"></div></section>
+<section class="panel"><h2>Live Events</h2><div class="events" id="events"><div style="color:var(--dim)">No warnings yet.</div></div></section>
+<section class="panel"><h2>Live Telemetry Log</h2><div class="log" id="log">Loading logs...</div></section>
+<section class="panel"><h2>Controls</h2><div class="toolbar"><button id="refreshBtn">REFRESH</button><button class="danger" id="stopBtn">SHUTDOWN SIMULATION</button></div></section>
+</aside>
+</div>
+<div class="actions"><div class="note">The flight data is synthetic telemetry generated by the simulator child processes (one fork()ed process per flight, sent to the controller over an anonymous pipe). It is not live data from real aircraft. The dashboard polls <code>/api/state</code> every second and visualizes the recent telemetry history.</div></div>
+</main>
+<script>
+const $=id=>document.getElementById(id); const cards={}; const previous={}; const events=[]; let stopped=false;
+function cls(s){return 'st-'+s.toLowerCase().replace(/[^a-z]+/g,'-').replace(/-$/,'');}
+function fmtUp(s){const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+'h ':'')+(h||m?m+'m ':'')+x+'s';}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function makeCard(f){const el=document.createElement('div');el.className='flight';el.innerHTML='<div class="top"><div><div class="fid"></div><div class="fname"></div></div><div class="badge"></div></div><div class="stats"><div class="stat"><div class="k">Altitude</div><div class="v" data-f="alt">--</div></div><div class="stat"><div class="k">Airspeed</div><div class="v" data-f="spd">--</div></div><div class="stat"><div class="k">Tick</div><div class="v" data-f="tick">--</div></div><div class="stat"><div class="k">Engine</div><div class="v" data-f="eng">--</div></div></div><div class="fuelrow"><span>FUEL</span><span data-f="fuel">--</span></div><div class="bar"><div class="fill"></div></div><canvas class="chart" data-chart="1"></canvas><div class="legend"><span>● ALTITUDE</span><span>● AIRSPEED</span></div><div class="foot"><span data-f="pid"></span><span data-f="pk"></span></div></div>';el.querySelector('.fid').textContent=f.id;el.querySelector('.fname').textContent=f.name;$('grid').appendChild(el);return el;}
+function drawChart(canvas,hist){const dpr=window.devicePixelRatio||1,w=canvas.clientWidth,h=canvas.clientHeight;canvas.width=w*dpr;canvas.height=h*dpr;const c=canvas.getContext('2d');c.scale(dpr,dpr);c.clearRect(0,0,w,h);c.strokeStyle='#1b3048';c.lineWidth=1;for(let i=1;i<4;i++){const y=(h/4)*i;c.beginPath();c.moveTo(0,y);c.lineTo(w,y);c.stroke();}if(!hist||hist.length<2)return;const series=[['altitude',9000,11000,'#38c7ff'],['airspeed',350,520,'#7590ff']];series.forEach(([key,min,max,color])=>{c.strokeStyle=color;c.lineWidth=2;c.beginPath();hist.forEach((p,i)=>{const x=i/(hist.length-1)*w;const v=Math.max(min,Math.min(max,p[key]));const y=h-((v-min)/(max-min))*(h-12)-6;i?c.lineTo(x,y):c.moveTo(x,y);});c.stroke();});}
+function render(s){$('sBackend').textContent=s.shutdown_requested?'SHUTTING DOWN':'ONLINE';$('sFlights').textContent=s.flight_count;$('sPackets').textContent=s.total_packets.toLocaleString();$('sPid').textContent=s.controller_pid;$('sUp').textContent=fmtUp(s.uptime_seconds);for(const f of s.flights){const old=previous[f.id];if(old&&old.tick!==f.tick&&(f.altitude_warning||f.fuel_warning||f.emergency)){events.unshift({id:f.id,tick:f.tick,status:f.status,bad:f.emergency});while(events.length>30)events.pop();}previous[f.id]={tick:f.tick,altitude_warning:f.altitude_warning,fuel_warning:f.fuel_warning,emergency:f.emergency};const el=cards[f.id]||(cards[f.id]=makeCard(f));const q=k=>el.querySelector('[data-f="'+k+'"]');el.className='flight '+(f.status==='EMERGENCY'?'st-emergency':'');const b=el.querySelector('.badge');b.textContent=f.status;b.className='badge '+cls(f.status);const has=f.has_data;q('alt').textContent=has?f.altitude.toLocaleString()+' ft':'--';q('spd').textContent=has?f.airspeed+' km/h':'--';q('tick').textContent=has?f.tick:'--';q('eng').textContent=has?f.engine:'--';q('eng').className='v '+(has?(f.engine==='ON'?'eng-on':'eng-off'):'');q('fuel').textContent=has?f.fuel+'%':'--';q('pid').textContent='PID '+f.pid;q('pk').textContent=f.packets+' packets';const fill=el.querySelector('.fill');fill.style.width=(has?Math.max(0,f.fuel):0)+'%';fill.style.background=f.fuel<=5?'var(--red)':f.fuel<=20?'var(--orange)':f.fuel<=40?'var(--amber)':'var(--green)';drawChart(el.querySelector('[data-chart]'),f.history);}
+$('processes').innerHTML=s.flights.map(f=>'<div class="proc"><b>'+esc(f.id)+'</b> <span class="'+(f.alive?'online':'offline')+'">'+(f.alive?'● ACTIVE':'● OFFLINE')+'</span><div class="small">PID '+f.pid+' · '+f.packets+' packets</div></div>').join('');
+$('events').innerHTML=events.length?events.map(e=>'<div class="event '+(e.bad?'bad':'warn')+'"><b>'+esc(e.id)+'</b> · tick '+e.tick+' · '+esc(e.status)+'</div>').join(''):'<div style="color:var(--dim)">No warnings yet.</div>';}
+function setConn(ok,msg){$('connDot').className='dot '+(ok?'on':'off');$('connText').textContent=msg;if(!ok)$('sBackend').textContent=stopped?'STOPPED':'OFFLINE';}
+async function poll(){const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),2000);try{const r=await fetch('/api/state',{cache:'no-store',signal:ctl.signal});if(!r.ok)throw Error('HTTP '+r.status);render(await r.json());setConn(true,'Connected to C backend at '+location.host+' | last update '+new Date().toLocaleTimeString());}catch(e){setConn(false,stopped?'Simulation stopped - backend has shut down':'Backend unreachable - retrying...');}finally{clearTimeout(t);}}
+async function refreshLog(){try{const r=await fetch('/api/logs',{cache:'no-store'});if(!r.ok)return;$('log').textContent=await r.text();$('log').scrollTop=$('log').scrollHeight;}catch(e){}}
+$('refreshBtn').onclick=()=>{poll();refreshLog();};$('stopBtn').onclick=async()=>{if(!confirm('Shut down the simulation? The controller will SIGTERM all flight processes and exit.'))return;try{const r=await fetch('/api/stop');if(r.ok){stopped=true;$('stopBtn').disabled=true;}}catch(e){}};
+poll();refreshLog();setInterval(poll,1000);setInterval(refreshLog,2000);window.addEventListener('resize',()=>document.querySelectorAll('[data-chart]').forEach((c)=>{const id=c.closest('.flight').querySelector('.fid').textContent;const f=window.lastState?.flights?.find(x=>x.id===id);if(f)drawChart(c,f.history);}));
+const _render=render;render=function(s){window.lastState=s;_render(s);};
+</script>
+</body>
+</html>
